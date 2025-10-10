@@ -5,7 +5,7 @@ const service: Service = {
   // overing the type definition on the previous row
   name: "service",
   id: 1n,
-  expected_waiting_time: "10 minutes"
+  expected_service_time: "10 minutes"
 };
 
 const ticket: Ticket = {
@@ -16,5 +16,6 @@ const ticket: Ticket = {
   taken_at: new Date(),
   estimated_waiting_time: "10 minutes",
   waiting_time: null,
+  service_time: null,
   served: false,
 };
