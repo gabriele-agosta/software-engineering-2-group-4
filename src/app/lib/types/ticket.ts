@@ -1,15 +1,13 @@
-export class Ticket {
-    constructor(
-        public id: number,
-        public serviceId: number,
-        public takenAt: Date = new Date(),
-        public estimatedWaitTime: number = 0,
-        public waitingTime: string = "",
-        public service_time: string = "",
-        public served: boolean = false
-    ) {}
+export interface Ticket {
+    id: number;
+    serviceId: number;
+    takenAt: Date;
+    estimatedWaitTime: number;
+    waitingTime: string;
+    service_time: string;
+    served: boolean;
 }
 
-export class CreateTicketRequest {
-    constructor(public serviceId: number) {}
+export interface CreateTicketRequest {
+    serviceId: number;
 }

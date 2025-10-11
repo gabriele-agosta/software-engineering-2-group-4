@@ -1,12 +1,16 @@
 'use server';
-import { createTicket as createTicketService }  from '../services/tickets.service';
 
-//fast implementation just for have a function for the frontend to call when desisgning the UI
+import { TicketsController } from '../controllers/tickets.controller';
+
 export async function createTicket(serviceId: number) {
     try {
-        const ticket = await createTicketService(serviceId);
-        return {id : ticket.id, serviceId: ticket.serviceId}; //need to know if serviceId is neccessary
+        const controller = new TicketsController();
+        const ticket = await controller.createTicket(serviceId);
+        
+        //change implementation after DB is set up and decide what to return
+        return ticket;
     } catch (error) {
-        throw error;
+        //better error handling after deciding what to return
+        return error;
     }
 }
