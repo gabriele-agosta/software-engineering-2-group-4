@@ -1,7 +1,6 @@
 import {z} from 'zod';
-import { id } from 'zod/locales';
 
-const TicketSchema = z.object({
+export const TicketSchema = z.object({
     id: z.number().positive().min(0).int(),
     serviceId: z.number().positive().min(0).int(),
     takenAt: z.date(),

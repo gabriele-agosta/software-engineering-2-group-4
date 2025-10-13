@@ -1,4 +1,4 @@
-import { Service } from '@/types/service';
+import { Service } from '@/schemas/service.schema';
 import { ServicesService } from '@/services/services.service';
 
 
