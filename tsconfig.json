@@ -11,8 +11,8 @@
       "@/types/*": ["./src/app/lib/types/*"],
       "@/lib/*": ["./src/app/lib/*"]
     },
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
