@@ -1,13 +1,17 @@
-import { CreateTicketResponse } from '@/schemas/ticket.schema';
+import { Ticket } from '@/schemas/ticket.schema';
+import { TicketsRepository } from '@/lib/repositories/tickets.repository';
 
 export class TicketsService {
-    async createTicket(serviceId: number): Promise<CreateTicketResponse> {
+    private ticketsRepository: TicketsRepository;
+
+    constructor() {
+        this.ticketsRepository = new TicketsRepository();
+    }
+
+    async createTicket(serviceId: number): Promise<Ticket> {
         try {
-            if (!serviceId) {
-                throw new Error("Service is required to create a ticket.");
-            }
-            // TODO Implement repository call after database is set up, need to choose if to return ticket + service id or just ticket id
-            return { id: 1, serviceId: serviceId };
+
+            return this.ticketsRepository.createTicket({ serviceId });
         }
         catch (error) {
             throw error;

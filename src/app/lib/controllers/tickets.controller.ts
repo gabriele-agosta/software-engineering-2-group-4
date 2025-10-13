@@ -1,5 +1,5 @@
 import { TicketsService } from '@/services/tickets.service';
-import { CreateTicketRequestSchema, CreateTicketResponse } from '../schemas/ticket.schema';
+import { CreateTicketRequestSchema, CreateTicketResponse, CreateTicketResponseSchema } from '../schemas/ticket.schema';
 
 export class TicketsController {
     private ticketsService: TicketsService;
@@ -11,8 +11,9 @@ export class TicketsController {
     async createTicket(serviceId: number): Promise<CreateTicketResponse> {
         try {
             const request = CreateTicketRequestSchema.parse({ serviceId });
-            //input validation after repo implementation, and decide what to return
-            return await this.ticketsService.createTicket(request.serviceId);
+            
+            const response = await this.ticketsService.createTicket(request.serviceId);
+            return CreateTicketResponseSchema.parse(response);
         } catch (error) {
             throw error;
         }

@@ -2,11 +2,11 @@ import {z} from 'zod';
 
 export const TicketSchema = z.object({
     id: z.number().positive().min(0).int(),
-    serviceId: z.number().positive().min(0).int(),
+    serviceId: z.bigint().positive(),
     takenAt: z.date(),
-    estimatedWaitTime: z.number().min(0),
+    estimatedWaitTime: z.string(),
     waitingTime: z.string(),
-    service_time: z.string(),
+    serviceTime: z.string(),
     served: z.boolean().default(false)});
 
 export const CreateTicketRequestSchema = z.object({
