@@ -7,10 +7,13 @@ export async function createTicket(serviceId: number) {
         const controller = new TicketsController();
         const ticket = await controller.createTicket(serviceId);
         
-        //change implementation after DB is set up and decide what to return
+        //basic error handling, can be improved if needed
         return ticket;
     } catch (error) {
-        //better error handling after deciding what to return
-        return error;
+        console.error('[createTicket] Action failed:', error);
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : 'Failed to create ticket' 
+        };
     }
 }
