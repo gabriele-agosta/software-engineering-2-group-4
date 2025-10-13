@@ -1,5 +1,5 @@
 
-import { Service } from '../types/service';
+import { Service } from '@/types/service';
 
 export class ServicesService {
     async getAllServices(): Promise<Service[]> {

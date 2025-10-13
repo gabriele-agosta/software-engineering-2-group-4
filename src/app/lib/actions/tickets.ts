@@ -1,6 +1,6 @@
 'use server';
 
-import { TicketsController } from '../controllers/tickets.controller';
+import { TicketsController } from '@/controllers/tickets.controller';
 
 export async function createTicket(serviceId: number) {
     try {

@@ -1,4 +1,4 @@
-import { TicketsService } from '../services/tickets.service';
+import { TicketsService } from '@/services/tickets.service';
 
 export class TicketsController {
     private ticketsService: TicketsService;

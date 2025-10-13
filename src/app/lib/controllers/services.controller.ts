@@ -1,5 +1,5 @@
-import { Service } from '../types/service';
-import {ServicesService} from "../services/services.service";
+import { Service } from '@/types/service';
+import { ServicesService } from '@/services/services.service';
 
 
 
