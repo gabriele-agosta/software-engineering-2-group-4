@@ -1,5 +1,16 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/schemas/*": ["./src/app/lib/schemas/*"],
+      "@/services/*": ["./src/app/lib/services/*"],
+      "@/controllers/*": ["./src/app/lib/controllers/*"],
+      "@/repositories/*": ["./src/app/lib/repositories/*"],
+      "@/actions/*": ["./src/app/lib/actions/*"],
+      "@/types/*": ["./src/app/lib/types/*"],
+      "@/lib/*": ["./src/app/lib/*"]
+    },
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -17,10 +28,7 @@
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
