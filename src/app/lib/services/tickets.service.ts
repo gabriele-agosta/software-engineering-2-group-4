@@ -1,5 +1,5 @@
 import { Ticket } from '@/schemas/ticket.schema';
-import { TicketsRepository } from '@/lib/repositories/tickets.repository';
+import { TicketsRepository } from '@/repositories/tickets.repository';
 
 export class TicketsService {
     private ticketsRepository: TicketsRepository;
