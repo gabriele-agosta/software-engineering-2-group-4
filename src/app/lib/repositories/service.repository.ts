@@ -6,7 +6,7 @@ export class ServiceRepository {
         try {
             const services = await prisma.service.findMany();
             
-            return services.map(service => ({
+            return services.map((service) => ({
                 id: service.id,
                 name: service.name,
                 expectedWaitTime: service.expected_service_time

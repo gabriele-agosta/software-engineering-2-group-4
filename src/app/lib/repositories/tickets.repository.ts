@@ -54,4 +54,50 @@ export class TicketsRepository {
       throw new Error("Could not mark ticket as served");
     }
   }
+
+  async getNextTicketInQueue(): Promise<Ticket | null> {
+    try {
+      const ticket = await prisma.ticket.findFirst({
+        where: {
+          served: false,
+          counter_id: null,
+        },
+        orderBy: { taken_at: "asc" },
+      });
+
+      if (!ticket) {
+        return null;
+      }
+
+      return {
+        id: ticket.id,
+        serviceId: ticket.service_id,
+        takenAt: ticket.taken_at,
+        estimatedWaitTime: ticket.estimated_waiting_time,
+        waitingTime: ticket.waiting_time || "",
+        serviceTime: ticket.service_time || "",
+        served: ticket.served,
+      };
+    } catch (error) {
+      throw new Error("Failed to fetch next ticket from database");
+    }
+  }
+
+  async assignTicketToCounter(
+    ticketId: number,
+    counterId: number
+  ): Promise<boolean> {
+    try {
+      await prisma.ticket.update({
+        where: { id: BigInt(ticketId) },
+        data: {
+          counter_id: BigInt(counterId),
+          assigned_at: new Date(),
+        },
+      });
+      return true;
+    } catch (error) {
+      throw new Error("Failed to assign ticket to counter");
+    }
+  }
 }

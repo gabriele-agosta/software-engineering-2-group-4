@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+// I'm leaving this as an example of how to integrate the Call Customer Logic with the GUI
+// - Gabriele
+
 interface TicketCall {
   ticket: any;
   counterId: number;
