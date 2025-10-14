@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Officer – Next Customer</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="topbar">
+      <h1>Counter <span id="counterId">C-01</span> — Next Customer</h1>
+      <p class="hint">Shortcuts: <kbd>N</kbd> Next · <kbd>R</kbd> Recall · <kbd>S</kbd> Served</p>
+    </header>
+
+    <section class="card">
+      <div class="card-row">
+        <div>
+          <p class="label">Current Ticket</p>
+          <div id="ticketBox" class="ticket-empty">
+            <div id="ticketCode" class="ticket-code">—</div>
+            <div id="ticketService" class="ticket-service"></div>
+            <div id="ticketIssued" class="ticket-issued"></div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="label">Counter</div>
+          <div id="counterValue" class="counter">C-01</div>
+          <div class="counter-edit">
+            <label for="counterInput" class="label">Change counter:</label>
+            <input id="counterInput" class="input" placeholder="e.g. C-02" />
+            <button id="applyCounter" class="btn btn-ghost">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="errorBox" class="alert hidden"></div>
+
+      <div class="grid3">
+        <button id="btnNext" class="btn btn-primary">Call Next (N)</button>
+        <button id="btnRecall" class="btn" disabled>Recall (R)</button>
+        <button id="btnServed" class="btn" disabled>Mark Served (S)</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
