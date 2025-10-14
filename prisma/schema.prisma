@@ -20,6 +20,12 @@ model Service {
   tickets                 Ticket[]
 }
 
+model Counter {
+  id                      BigInt   @id @default(autoincrement())
+  active                  Boolean  @default(true)
+  tickets                 Ticket[]
+}
+
 model Ticket {
   id                      BigInt   @id @default(autoincrement())
   service_id              BigInt
@@ -28,5 +34,8 @@ model Ticket {
   waiting_time            String?   //time in queue
   service_time            String?   //time at the desk
   served                  Boolean  @default(false)
+  assigned_at             DateTime?
+  counter_id              BigInt?
   service                 Service  @relation(fields: [service_id], references: [id])
+  counter                 Counter? @relation(fields: [counter_id], references: [id])
 }
