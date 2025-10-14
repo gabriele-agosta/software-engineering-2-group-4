@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const TicketSchema = z.object({
-  id: z.bigint().positive(),
-  serviceId: z.bigint().positive(),
+  id: z.int().positive(),
+  serviceId: z.int().positive(),
   takenAt: z.date(),
   estimatedWaitTime: z.string(),
   waitingTime: z.string(),
@@ -11,12 +11,12 @@ export const TicketSchema = z.object({
 });
 
 export const CreateTicketRequestSchema = z.object({
-  serviceId: z.bigint().positive(),
+  serviceId: z.int().positive(),
 });
 
 export const CreateTicketResponseSchema = z.object({
-  id: z.bigint().positive(),
-  serviceId: z.bigint().positive(),
+  id: z.int().positive(),
+  serviceId: z.int().positive(),
 });
 
 export type Ticket = z.infer<typeof TicketSchema>;

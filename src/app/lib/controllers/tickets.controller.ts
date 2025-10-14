@@ -13,7 +13,7 @@ export class TicketsController {
     this.ticketsService = new TicketsService();
   }
 
-  async createTicket(serviceId: bigint): Promise<CreateTicketResponse> {
+  async createTicket(serviceId: number): Promise<CreateTicketResponse> {
     try {
       const request = CreateTicketRequestSchema.parse({ serviceId });
 

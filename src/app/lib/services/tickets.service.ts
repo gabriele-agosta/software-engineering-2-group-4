@@ -8,7 +8,7 @@ export class TicketsService {
     this.ticketsRepository = new TicketsRepository();
   }
 
-  async createTicket(serviceId: bigint): Promise<Ticket> {
+  async createTicket(serviceId: number): Promise<Ticket> {
     try {
       return this.ticketsRepository.createTicket({ serviceId });
     } catch (error) {

@@ -1,6 +1,7 @@
 "use server";
 
 import { TicketsController } from "@/controllers/tickets.controller";
+import { callNextCustomer } from "@/actions/counter";
 import { Ticket } from "@/schemas/ticket.schema";
 import dayjs from "dayjs";
 import { notifier } from "../notifier/notifier";
@@ -16,7 +17,7 @@ function serializeTicket(ticket: any): any {
   };
 }
 
-export async function createTicket(serviceId: bigint) {
+export async function createTicket(serviceId: number) {
   try {
     const controller = new TicketsController();
     const ticket = await controller.createTicket(serviceId);
@@ -34,17 +35,10 @@ export async function createTicket(serviceId: bigint) {
 
 // When the story to setup counters will be implemented, this function should be completed
 // to only choose tickets from a specific counter's services.
-export async function callNextTicket(serviceId: bigint) {
-  const convertedServiceId = BigInt(serviceId);
+export async function callNextTicket(serviceId: number, counterId: number) {
   try {
-    const controller = new TicketsController();
-
-    // const ticket = await controller.getNextTicketForCounter(counterId);
-
-    // Placeholder ticket
-    const ticket = await controller.createTicket(serviceId);
-    //Placeholder counterId
-    const counterId = 1;
+    const result = await callNextCustomer(counterId);
+    const ticket = result?.ticket ?? null;
 
     if (ticket) {
       const currentDate = dayjs();
@@ -61,7 +55,6 @@ export async function callNextTicket(serviceId: bigint) {
 
     return null;
   } catch (error) {
-    console.error("[callNextTicket] Action failed:", error);
     throw new Error(
       error instanceof Error ? error.message : "Failed to call next ticket"
     );

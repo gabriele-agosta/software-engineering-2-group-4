@@ -24,11 +24,6 @@ class Notifier {
   }
 
   notifyTicketCall(notification: TicketCallNotification) {
-    console.log(
-      "[Notifier] Notifying clients:",
-      this.clients.size,
-      notification
-    );
     const encoder = new TextEncoder();
     const data = `data: ${JSON.stringify({
       type: "ticket_called",
@@ -37,7 +32,6 @@ class Notifier {
 
     this.clients.forEach((controller) => {
       try {
-        console.log("[Notifier] Sending to client");
         controller.enqueue(encoder.encode(data));
       } catch (error) {
         console.error("[Notifier] Error sending to client:", error);

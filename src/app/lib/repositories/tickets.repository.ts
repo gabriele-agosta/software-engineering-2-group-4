@@ -13,8 +13,8 @@ export class TicketsRepository {
       });
 
       return {
-        id: dbTicket.id,
-        serviceId: dbTicket.service_id,
+        id: Number(dbTicket.id),
+        serviceId: Number(dbTicket.service_id),
         takenAt: dbTicket.taken_at,
         estimatedWaitTime: dbTicket.estimated_waiting_time,
         waitingTime: dbTicket.waiting_time || "",
@@ -28,18 +28,39 @@ export class TicketsRepository {
 
   async markTicketAsServed(ticketId: number): Promise<Ticket> {
     try {
+      const ticket = await prisma.ticket.findUnique({
+        where: { id: BigInt(ticketId) },
+      });
+
+      if (!ticket) {
+        throw new Error("Ticket not found");
+      }
+
+      if (!ticket.assigned_at) {
+        throw new Error("Ticket has not been assigned to a counter");
+      }
+
+      const serviceTimeMs = new Date().getTime() - ticket.assigned_at.getTime();
+      const hours = Math.floor(serviceTimeMs / 3600000);
+      const minutes = Math.floor((serviceTimeMs % 3600000) / 60000);
+      const seconds = Math.floor((serviceTimeMs % 60000) / 1000);
+      const serviceTime = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
       const dbTicket = await prisma.ticket.update({
         where: {
           id: BigInt(ticketId),
         },
         data: {
           served: true,
+          service_time: serviceTime,
         },
       });
 
       return {
-        id: dbTicket.id,
-        serviceId: dbTicket.service_id,
+        id: Number(dbTicket.id),
+        serviceId: Number(dbTicket.service_id),
         takenAt: dbTicket.taken_at,
         estimatedWaitTime: dbTicket.estimated_waiting_time,
         waitingTime: dbTicket.waiting_time || "",
@@ -70,8 +91,8 @@ export class TicketsRepository {
       }
 
       return {
-        id: ticket.id,
-        serviceId: ticket.service_id,
+        id: Number(ticket.id),
+        serviceId: Number(ticket.service_id),
         takenAt: ticket.taken_at,
         estimatedWaitTime: ticket.estimated_waiting_time,
         waitingTime: ticket.waiting_time || "",
@@ -88,11 +109,31 @@ export class TicketsRepository {
     counterId: number
   ): Promise<boolean> {
     try {
+      console.log(`Assigning ticket ${ticketId} to counter ${counterId}`);
+      const ticket = await prisma.ticket.findUnique({
+        where: { id: BigInt(ticketId) },
+      });
+
+      if (!ticket) {
+        throw new Error("Ticket not found");
+      }
+
+      const assignedAt = new Date();
+      const waitingTimeMs =
+        assignedAt.getTime() - new Date(ticket.taken_at).getTime();
+      const hours = Math.floor(waitingTimeMs / 3600000);
+      const minutes = Math.floor((waitingTimeMs % 3600000) / 60000);
+      const seconds = Math.floor((waitingTimeMs % 60000) / 1000);
+      const waitingTime = `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
       await prisma.ticket.update({
         where: { id: BigInt(ticketId) },
         data: {
           counter_id: BigInt(counterId),
-          assigned_at: new Date(),
+          assigned_at: assignedAt,
+          waiting_time: waitingTime,
         },
       });
       return true;
