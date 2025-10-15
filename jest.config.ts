@@ -92,7 +92,17 @@ const config: Config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    '^@/db$': '<rootDir>/src/app/lib/db',
+    '^@/schemas/(.*)$': '<rootDir>/src/app/lib/schemas/$1',
+    '^@/services/(.*)$': '<rootDir>/src/app/lib/services/$1',
+    '^@/controllers/(.*)$': '<rootDir>/src/app/lib/controllers/$1',
+    '^@/repositories/(.*)$': '<rootDir>/src/app/lib/repositories/$1',
+    '^@/actions/(.*)$': '<rootDir>/src/app/lib/actions/$1',
+    '^@/types/(.*)$': '<rootDir>/src/app/lib/types/$1',
+    '^@/lib/(.*)$': '<rootDir>/src/app/lib/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -177,7 +187,16 @@ const config: Config = {
   // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
-  // transform: undefined,
+  transform: {
+    '^.+\\.(ts|tsx)$': ['ts-jest', { useESM: true }],
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+      tsconfig: './tsconfig.json',
+    },
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
