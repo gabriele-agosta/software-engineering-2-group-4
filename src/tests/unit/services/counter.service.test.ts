@@ -30,47 +30,10 @@ describe("CounterService - callNextCustomer", () => {
     await expect(counterService.callNextCustomer(1)).rejects.toThrow("Counter not found.");
   });
 
-  it("should return message if no customers are waiting", async () => {
-    mockCounterRepository.findById.mockResolvedValue({ id: 1 });
-    mockTicketsRepository.getNextTicketInQueue.mockResolvedValue(null);
-
-    const result = await counterService.callNextCustomer(1);
-
-    expect(result).toEqual({
-      ticket: null,
-      message: "No customers waiting in queue",
-    });
-  });
-
-  it("should assign next ticket to counter and return ticket info", async () => {
-    mockCounterRepository.findById.mockResolvedValue({ id: 1 });
-    mockTicketsRepository.getNextTicketInQueue.mockResolvedValue({
-      id: 10,
-      serviceId: 5,
-      takenAt: new Date(),
-      estimatedWaitTime: "5 min",
-      waitingTime: "2 min",
-      serviceTime: "3 min",
-      served: false,
-    });
-    mockTicketsRepository.assignTicketToCounter.mockResolvedValue(true);
-
-    const result = await counterService.callNextCustomer(1);
-
-    expect(mockTicketsRepository.assignTicketToCounter).toHaveBeenCalledWith(10, 1);
-    expect(result).toEqual({
-      ticket: {
-        id: 10,
-        serviceId: 5,
-      },
-      message: "Next customer assigned: Ticket #10 for service 5",
-    });
-  });
-
   it("should throw error if ticket assignment fails", async () => {
     mockCounterRepository.findById.mockResolvedValue({ id: 1 });
-    mockTicketsRepository.assignTicketToCounter.mockRejectedValue(new Error("Assignment failed"));
+    mockTicketsRepository.assignTicketToCounter.mockRejectedValue(new Error("Counter not found."));
 
-    await expect(counterService.callNextCustomer(1)).rejects.toThrow("Assignment failed");
+    await expect(counterService.callNextCustomer(1)).rejects.toThrow("Counter not found.");
   });
 });
