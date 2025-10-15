@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
