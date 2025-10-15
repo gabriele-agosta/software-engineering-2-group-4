@@ -37,7 +37,10 @@ export default function selectRolePage() {
                 purchase history.
               </p>
               <div className="mt-auto">
-                <Link href="/customer" className="btn btn-success w-100">
+                <Link
+                  href="/customer/get-ticket"
+                  className="btn btn-success w-100"
+                >
                   Select Customer
                 </Link>
               </div>
