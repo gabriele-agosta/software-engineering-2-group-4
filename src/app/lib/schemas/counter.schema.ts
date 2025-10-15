@@ -1,21 +1,27 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const CounterSchema = z.object({
-    id: z.number().positive().int(),
+  id: z.number().positive().int(),
 });
 
 export const CallNextCustomerRequestSchema = z.object({
-    counterId: z.number().positive().int(),
+  counterId: z.number().positive().int(),
 });
 
 export const CallNextCustomerResponseSchema = z.object({
-    ticket: z.object({
-        id: z.number().positive().int(),
-        serviceId: z.number().positive().int(),
-    }).nullable(),
-    message: z.string(),
+  ticket: z
+    .object({
+      id: z.int().positive(),
+      serviceId: z.int().positive(),
+    })
+    .nullable(),
+  message: z.string(),
 });
 
 export type Counter = z.infer<typeof CounterSchema>;
-export type CallNextCustomerRequest = z.infer<typeof CallNextCustomerRequestSchema>;
-export type CallNextCustomerResponse = z.infer<typeof CallNextCustomerResponseSchema>;
+export type CallNextCustomerRequest = z.infer<
+  typeof CallNextCustomerRequestSchema
+>;
+export type CallNextCustomerResponse = z.infer<
+  typeof CallNextCustomerResponseSchema
+>;
