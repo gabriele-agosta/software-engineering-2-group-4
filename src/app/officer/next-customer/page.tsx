@@ -2,15 +2,23 @@
 
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
-import type { Ticket } from "@/app/api/officer";
-import { apiGetNext, apiRecall, apiServed } from "@/app/api/officer";
+import { callNextCustomer } from "@/lib/actions/counter"; 
 
+type UITicket = {
+  id: string;
+  code: string;
+  service: string;
+  issuedAt?: string;
+};
 
-
+function parseCounterId(raw: string): number {
+  const n = parseInt((raw.match(/\d+/)?.[0] ?? "").replace(/^0+/, "") || "0", 10);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
 
 export default function NextCustomerPage() {
   const [counterId, setCounterId] = useState("C-01");
-  const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [ticket, setTicket] = useState<UITicket | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,8 +35,26 @@ export default function NextCustomerPage() {
     try {
       setError(null);
       setLoading(true);
-      const t = await apiGetNext(counterId);
-      setTicket(t);
+
+      const counterNum = parseCounterId(counterId);
+      if (!counterNum) throw new Error("Invalid counter id");
+
+      const res = await callNextCustomer(counterNum);
+
+      if (!res?.ticket) {
+        setTicket(null);
+        return;
+      }
+
+      const t = res.ticket as { id: number; serviceId: number; takenAt?: string };
+      const mapped: UITicket = {
+        id: String(t.id),
+        code: String(t.id),
+        service: `Service ${t.serviceId}`,   
+        issuedAt: t.takenAt ?? undefined,
+      };
+
+      setTicket(mapped);
     } catch (e: any) {
       setError(e?.message ?? "Error");
     } finally {
@@ -37,27 +63,11 @@ export default function NextCustomerPage() {
   }
 
   async function recall() {
-    if (!ticket) return;
-    try {
-      setError(null);
-      await apiRecall(ticket.id);
-    } catch (e: any) {
-      setError(e?.message ?? "Recall failed");
-    }
+    setError("Recall is not implemented yet.");
   }
 
   async function served() {
-    if (!ticket) return;
-    try {
-      setError(null);
-      setLoading(true);
-      await apiServed(ticket.id);
-      setTicket(null);
-    } catch (e: any) {
-      setError(e?.message ?? "Mark served failed");
-    } finally {
-      setLoading(false);
-    }
+    setError("Mark Served is not implemented yet.");
   }
 
   // Shortcuts: N / R / S
@@ -75,7 +85,9 @@ export default function NextCustomerPage() {
   return (
     <main className={styles.container}>
       <header className={styles.topbar}>
-        <h1>Next Customer — <span>Counter {counterId}</span></h1>
+        <h1>
+          Next Customer — <span>Counter {counterId}</span>
+        </h1>
         <p className={styles.hint}>
           Shortcuts: <kbd>N</kbd> Next · <kbd>R</kbd> Recall · <kbd>S</kbd> Served
         </p>
@@ -87,7 +99,9 @@ export default function NextCustomerPage() {
             <div className={styles.label}>Counter</div>
             <div className={styles.counter}>{counterId}</div>
             <div className={styles.edit}>
-              <label htmlFor="counterInput" className={styles.label}>Change counter:</label>
+              <label htmlFor="counterInput" className={styles.label}>
+                Change counter:
+              </label>
               <input
                 id="counterInput"
                 className={styles.input}
@@ -117,7 +131,11 @@ export default function NextCustomerPage() {
           </div>
         </div>
 
-        {error && <div className={styles.alert} role="alert">{error}</div>}
+        {error && (
+          <div className={styles.alert} role="alert">
+            {error}
+          </div>
+        )}
 
         <div className={styles.btnRow}>
           <button className={`${styles.btn} ${styles.primary}`} onClick={callNext} disabled={loading}>
