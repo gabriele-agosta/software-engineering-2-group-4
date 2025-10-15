@@ -2,7 +2,7 @@ import {z} from 'zod';
 
 export const TicketSchema = z.object({
     id: z.number().positive().min(0).int(),
-    serviceId: z.bigint().positive(),
+    serviceId: z.number().positive().min(0).int(),
     takenAt: z.date(),
     estimatedWaitTime: z.string(),
     waitingTime: z.string(),
