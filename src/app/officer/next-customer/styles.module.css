@@ -1,0 +1,95 @@
+/* === globals (allowed in CSS Module via :global) === */
+:global(:root) {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --border: #e6e8eb;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #111827;
+  --alert-bg: #fef2f2;
+  --alert: #b91c1c;
+}
+
+:global(*) { box-sizing: border-box; }
+
+:global(body) {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* === local module classes === */
+.container { max-width: 960px; margin: 24px auto; padding: 0 16px; }
+
+.topbar h1 { margin: 0; font-size: 22px; font-weight: 800; }
+
+.hint { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.03);
+}
+
+.card-row { display: flex; gap: 24px; justify-content: space-between; align-items: flex-start; }
+
+.right { text-align: right; min-width: 240px; }
+
+.label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+
+.counter { font-size: 26px; font-weight: 800; margin-top: 4px; }
+
+.counter-edit { margin-top: 8px; display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+
+.ticket-code { font-size: 56px; font-weight: 900; letter-spacing: .02em; }
+
+.ticket-service { color: var(--muted); margin-top: 4px; }
+
+.ticket-issued { color: #9ca3af; font-size: 12px; margin-top: 2px; }
+
+.ticket-empty .ticket-code { color: #9ca3af; }
+
+.alert {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--alert-bg);
+  color: var(--alert);
+  border: 1px solid #fecaca;
+}
+
+.hidden { display: none; }
+
+.input {
+  height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-width: 120px;
+}
+
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+
+.btn {
+  height: 40px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 12px;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+.btn-ghost { background: transparent; }
+
+@media (max-width: 720px) {
+  .card-row { flex-direction: column; }
+  .right { text-align: left; }
+}
