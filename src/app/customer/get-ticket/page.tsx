@@ -1,5 +1,3 @@
-// src/app/customer/get-ticket/page.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -12,7 +10,7 @@ type Ticket = {
   timestamp: Date;
 };
 
-// Updated services array with 6 items
+// Mock services list...
 const services = [
   {
     id: 1,
