@@ -1,0 +1,59 @@
+/* Global styles for the Queue Management System */
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+  --success-color: #198754;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #0dcaf0;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: inherit;
+}
+
+body {
+  color: var(--dark-color);
+  background: var(--light-color);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Custom utilities for the app */
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Animation for smooth transitions */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

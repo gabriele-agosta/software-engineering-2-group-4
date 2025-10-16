@@ -1,33 +1,128 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { CreateTicketResponse } from "@/schemas/ticket.schema";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import { CreateTicketResponse } from "@/app/lib/schemas/ticket.schema";
 import { ServiceResponse } from "@/app/lib/schemas/service.schema";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
+interface TicketDisplay {
+  id: number;
+  number: string;
+  serviceName: string;
+  timestamp: Date;
+}
 
-const services =
+// API endpoint constants
+const API_ENDPOINTS = {
+  SERVICES: '/api/services',
+  TICKETS: '/api/tickets',
+} as const;
+
 export default function GetTicketPage() {
-  const [ticket, setTicket] = useState<CreateTicketResponse | null>(null);
+  const router = useRouter();
+  const [services, setServices] = useState<ServiceResponse[]>([]);
+  const [ticket, setTicket] = useState<TicketDisplay | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedService, setSelectedService] = useState<Servi | null>(null);
+  const [isLoadingServices, setIsLoadingServices] = useState<boolean>(true);
+  const [selectedService, setSelectedService] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
+  // Fetch services on component mount with useCallback for better performance
+  const fetchServices = useCallback(async () => {
+    try {
+      setIsLoadingServices(true);
+      setError(null);
+      
+      const response = await fetch(API_ENDPOINTS.SERVICES, {
+        method: 'GET',
+        cache: 'no-store', // Next.js specific - ensures fresh data
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data.services || !Array.isArray(data.services)) {
+        throw new Error('Invalid services data format');
+      }
+      
+      setServices(data.services);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to load services: ${errorMessage}`);
+      console.error('Error fetching services:', err);
+    } finally {
+      setIsLoadingServices(false);
+    }
+  }, []);
 
-  const handleServiceSelect = (serviceName: string) => {
+  useEffect(() => {
+    fetchServices();
+  }, [fetchServices]);
+
+  // Helper function for resetting state
+  const resetToServiceSelection = useCallback(() => {
+    setTicket(null);
+    setError(null);
+  }, []);
+
+  // Helper function for retrying service fetch
+  const retryFetchServices = useCallback(() => {
+    setError(null);
+    fetchServices();
+  }, [fetchServices]);
+
+  const handleServiceSelect = useCallback(async (service: ServiceResponse) => {
     setIsLoading(true);
-    setSelectedService(serviceName); // Keep track of which service is loading
+    setSelectedService(service.id);
+    setError(null);
 
-    setTimeout(() => {
-      const mockTicket: Ticket = {
-        number: `C-${String(Math.floor(Math.random() * 900) + 100)}`,
-        service: serviceName,
+    try {
+      const response = await fetch(API_ENDPOINTS.TICKETS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ serviceId: service.id }),
+        cache: 'no-store', // Next.js specific - no caching for POST requests
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (!data.ticket) {
+        throw new Error('Invalid ticket data received');
+      }
+      
+      const ticketData = data.ticket;
+
+      // Create display ticket with formatted number
+      const displayTicket: TicketDisplay = {
+        id: ticketData.id,
+        number: `T-${String(ticketData.id).padStart(3, '0')}`,
+        serviceName: service.name,
         timestamp: new Date(),
       };
-      setTicket(mockTicket);
+
+      setTicket(displayTicket);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(`Failed to create ticket: ${errorMessage}`);
+      console.error('Error creating ticket:', err);
+    } finally {
       setIsLoading(false);
-      setSelectedService(null); // Reset after loading
-    }, 500);
-  };
+      setSelectedService(null);
+    }
+  }, []);
 
   // === UI Part 1: Show the generated ticket ===
   if (ticket) {
@@ -41,7 +136,7 @@ export default function GetTicketPage() {
             <p className="card-text">Please proceed to the waiting area.</p>
             <h1 className="display-1 fw-bold my-4">{ticket.number}</h1>
             <h5 className="card-subtitle mb-2 text-muted">
-              Service: {ticket.service}
+              Service: {ticket.serviceName}
             </h5>
             <p className="card-text">
               <small>Issued at: {ticket.timestamp.toLocaleTimeString()}</small>
@@ -50,7 +145,7 @@ export default function GetTicketPage() {
           <div className="card-footer">
             <button
               className="btn btn-secondary w-100"
-              onClick={() => setTicket(null)}
+              onClick={resetToServiceSelection}
             >
               Get Another Ticket
             </button>
@@ -61,6 +156,48 @@ export default function GetTicketPage() {
   }
 
   // === UI Part 2: Show the list of services as consistent cards ===
+  
+  if (isLoadingServices) {
+    return (
+      <main className="container my-5">
+        <LoadingSpinner text="Loading services..." />
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="container my-5">
+        <div className="text-center">
+          <div className="alert alert-danger" role="alert">
+            <h4 className="alert-heading">Oops! Something went wrong</h4>
+            <p>{error}</p>
+            <hr />
+            <div className="d-grid gap-2 d-md-flex justify-content-md-center">
+              <button 
+                className="btn btn-primary" 
+                onClick={retryFetchServices}
+                disabled={isLoadingServices}
+              >
+                {isLoadingServices ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Retrying...
+                  </>
+                ) : (
+                  'Try Again'
+                )}
+              </button>
+              <Link href="/" className="btn btn-outline-secondary">
+                Go Back Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="container my-5">
       <div className="text-center mb-4">
@@ -82,14 +219,14 @@ export default function GetTicketPage() {
             <div className="card h-100 shadow-sm">
               <div className="card-body text-center d-flex flex-column">
                 <h5 className="card-title h2">{service.name}</h5>
-                <p className="card-text text-muted">{service.description}</p>
+                <p className="card-text text-muted">Select this service to get your ticket</p>
                 <div className="mt-auto">
                   <button
                     className="btn btn-primary w-100"
-                    onClick={() => handleServiceSelect(service.name)}
+                    onClick={() => handleServiceSelect(service)}
                     disabled={isLoading}
                   >
-                    {isLoading && selectedService === service.name ? (
+                    {isLoading && selectedService === service.id ? (
                       <>
                         <span
                           className="spinner-border spinner-border-sm me-2"
