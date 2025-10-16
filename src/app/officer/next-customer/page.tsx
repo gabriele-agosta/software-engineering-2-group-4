@@ -56,6 +56,17 @@ export default function NextCustomerPage() {
     }
   }
 
+<<<<<<< HEAD
+=======
+  async function recall() {
+    setError("Recall is not implemented yet.");
+  }
+
+  async function served() {
+    setError("Mark Served is not implemented yet.");
+  }
+
+>>>>>>> c7cfed700072cb5d01de6bee5d50676014194652
   // Shortcuts: N / R / S
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
