@@ -13,10 +13,9 @@ export default function selectRolePage() {
         <div className="col-md-5 col-lg-4">
           <div className="card h-100 shadow-sm">
             <div className="card-body text-center d-flex flex-column">
-              <h5 className="card-title h2">Manager</h5>
+              <h5 className="card-title h2">Officer</h5>
               <p className="card-text text-muted">
-                Access the administrative dashboard to manage operations, view
-                analytics, and oversee staff.
+                Access the operative dashboard to manage operations.
               </p>
               <div className="mt-auto">
                 <Link href="/manager" className="btn btn-primary w-100">
