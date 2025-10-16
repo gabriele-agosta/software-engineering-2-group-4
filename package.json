@@ -11,6 +11,7 @@
   "dependencies": {
     "@prisma/client": "^6.17.0",
     "dayjs": "^1.11.18",
+    "bootstrap": "^5.3.8",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -26,5 +27,18 @@
     "prisma": "^6.17.0",
     "tsx": "^4.20.6",
     "typescript": "^5"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabriele-agosta/software-engineering-2-group-4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabriele-agosta/software-engineering-2-group-4/issues"
+  },
+  "homepage": "https://github.com/gabriele-agosta/software-engineering-2-group-4#readme"
 }
