@@ -2,15 +2,23 @@
 
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
-import type { Ticket } from "@/app/api/officer";
-import { apiGetNext, apiRecall, apiServed } from "@/app/api/officer";
+import { callNextTicket } from "@/app/lib/actions/tickets";
 
+function parseCounterNumber(counterId: string): number | null {
+  // Accepts "C-01", "C01", "COUNTER-003", etc. Returns the numeric part as integer or null if not parseable.
+  const m = counterId.match(/^[A-Za-z]+-?0*([0-9]+)$/);
+  if (!m) return null;
+  return parseInt(m[1], 10);
+}
 
-
+type TempTicket = {
+  id: number;
+  service: number;
+};
 
 export default function NextCustomerPage() {
   const [counterId, setCounterId] = useState("C-01");
-  const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [ticket, setTicket] = useState<TempTicket | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,34 +35,22 @@ export default function NextCustomerPage() {
     try {
       setError(null);
       setLoading(true);
-      const t = await apiGetNext(counterId);
-      setTicket(t);
+      const num = parseCounterNumber(counterId);
+
+      if (num === null) throw new Error("Invalid counter ID format");
+
+      const t = await callNextTicket(1, num);
+      if (t === null) {
+        setTicket(null);
+      } else {
+        const ticket = {
+          id: t.id,
+          service: t.serviceId,
+        };
+        setTicket(ticket);
+      }
     } catch (e: any) {
       setError(e?.message ?? "Error");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function recall() {
-    if (!ticket) return;
-    try {
-      setError(null);
-      await apiRecall(ticket.id);
-    } catch (e: any) {
-      setError(e?.message ?? "Recall failed");
-    }
-  }
-
-  async function served() {
-    if (!ticket) return;
-    try {
-      setError(null);
-      setLoading(true);
-      await apiServed(ticket.id);
-      setTicket(null);
-    } catch (e: any) {
-      setError(e?.message ?? "Mark served failed");
     } finally {
       setLoading(false);
     }
@@ -65,8 +61,6 @@ export default function NextCustomerPage() {
     const onKey = (e: KeyboardEvent) => {
       const k = (e.key || "").toLowerCase();
       if (k === "n") callNext();
-      if (k === "r") recall();
-      if (k === "s") served();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -75,9 +69,11 @@ export default function NextCustomerPage() {
   return (
     <main className={styles.container}>
       <header className={styles.topbar}>
-        <h1>Next Customer — <span>Counter {counterId}</span></h1>
+        <h1>
+          Next Customer — <span>Counter {counterId}</span>
+        </h1>
         <p className={styles.hint}>
-          Shortcuts: <kbd>N</kbd> Next · <kbd>R</kbd> Recall · <kbd>S</kbd> Served
+          Shortcuts: <kbd>N</kbd> Next
         </p>
       </header>
 
@@ -87,7 +83,9 @@ export default function NextCustomerPage() {
             <div className={styles.label}>Counter</div>
             <div className={styles.counter}>{counterId}</div>
             <div className={styles.edit}>
-              <label htmlFor="counterInput" className={styles.label}>Change counter:</label>
+              <label htmlFor="counterInput" className={styles.label}>
+                Change counter:
+              </label>
               <input
                 id="counterInput"
                 className={styles.input}
@@ -102,32 +100,31 @@ export default function NextCustomerPage() {
           <div className={styles.block}>
             <p className={styles.label}>Current Ticket</p>
             <div className={ticket ? "" : styles.ticketEmpty}>
-              <div className={styles.ticketCode}>{ticket?.code ?? "—"}</div>
+              <div className={styles.ticketCode}>{ticket?.id ?? "—"}</div>
               {ticket && (
                 <>
-                  <div className={styles.ticketService}>Service: {ticket.service}</div>
-                  {ticket.issuedAt && (
-                    <div className={styles.ticketIssued}>
-                      Issued: {new Date(ticket.issuedAt).toLocaleTimeString()}
-                    </div>
-                  )}
+                  <div className={styles.ticketService}>
+                    Service: {ticket.service}
+                  </div>
                 </>
               )}
             </div>
           </div>
         </div>
 
-        {error && <div className={styles.alert} role="alert">{error}</div>}
+        {error && (
+          <div className={styles.alert} role="alert">
+            {error}
+          </div>
+        )}
 
         <div className={styles.btnRow}>
-          <button className={`${styles.btn} ${styles.primary}`} onClick={callNext} disabled={loading}>
+          <button
+            className={`${styles.btn} ${styles.primary}`}
+            onClick={callNext}
+            disabled={loading}
+          >
             Call Next (N)
-          </button>
-          <button className={styles.btn} onClick={recall} disabled={!ticket}>
-            Recall (R)
-          </button>
-          <button className={styles.btn} onClick={served} disabled={!ticket || loading}>
-            Mark Served (S)
           </button>
         </div>
       </section>
