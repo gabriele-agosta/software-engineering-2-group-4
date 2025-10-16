@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import type { Metadata } from "next";
-import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Ticket Queue",

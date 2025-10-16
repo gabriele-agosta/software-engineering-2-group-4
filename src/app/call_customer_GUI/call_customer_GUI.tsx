@@ -42,7 +42,7 @@ export default function Call_Customer_GUI() {
     }]);//ticket inserted to try the layout: to remove before deploy
 
     useEffect(() => {
-        const eventSource = new EventSource("/api/notifications");
+        const eventSource = new EventSource("/api/ticket/stream");
 
         eventSource.onopen = () => console.log("✅ Connection opened (SSE)");
     
