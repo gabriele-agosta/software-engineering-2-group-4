@@ -41,6 +41,7 @@ export async function callNextTicket(serviceId: number, counterId: number) {
     const ticket = result?.ticket ?? null;
 
     if (ticket) {
+      console.log("Ticket:", ticket);
       const currentDate = dayjs();
       const formattedDate = currentDate.format("YYYY-MM-DD HH:mm:ss");
       const serializedTicket = serializeTicket(ticket);

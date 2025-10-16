@@ -18,10 +18,10 @@ export class CounterService {
       }
 
       // Check if counter exists
-      const counter = await this.counterRepository.findById(counterId);
-      if (!counter) {
-        throw new Error("Counter not found.");
-      }
+      //const counter = await this.counterRepository.findById(counterId);
+      //if (!counter) {
+      //throw new Error("Counter not found.");
+      //}
 
       // Get next ticket from queue
       const nextTicket = await this.ticketRepository.getNextTicketInQueue();
