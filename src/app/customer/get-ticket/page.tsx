@@ -2,60 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { CreateTicketResponse } from "@/schemas/ticket.schema";
+import { ServiceResponse } from "@/app/lib/schemas/service.schema";
 
-// A type definition for what a ticket object will look like.
-type Ticket = {
-  number: string;
-  service: string;
-  timestamp: Date;
-};
 
-// Mock services list...
-const services = [
-  {
-    id: 1,
-    name: "General Inquiries",
-    description:
-      "For questions about your account, statements, or our products.",
-  },
-  {
-    id: 2,
-    name: "New Account",
-    description: "Open a new checking, savings, or investment account with us.",
-  },
-  {
-    id: 3,
-    name: "Card Services",
-    description:
-      "Help with your debit/credit card, including activation or disputes.",
-  },
-  {
-    id: 4,
-    name: "Loan Department",
-    description:
-      "Speak with a specialist about mortgages, auto, or personal loans.",
-  },
-  {
-    id: 5,
-    name: "Wealth Management",
-    description:
-      "Consult with our financial advisors for investment and planning.",
-  },
-  {
-    id: 6,
-    name: "Business Banking",
-    description: "Services for our corporate and small business clients.",
-  },
-];
-
+const services =
 export default function GetTicketPage() {
-  const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [ticket, setTicket] = useState<CreateTicketResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<Servi | null>(null);
 
-  /**
-   * PLACEHOLDER LOGIC: Simulates generating a ticket.
-   */
+
   const handleServiceSelect = (serviceName: string) => {
     setIsLoading(true);
     setSelectedService(serviceName); // Keep track of which service is loading
