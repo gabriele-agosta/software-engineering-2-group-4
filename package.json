@@ -10,18 +10,22 @@
   },
   "dependencies": {
     "@prisma/client": "^6.17.0",
+    "dayjs": "^1.11.18",
     "bootstrap": "^5.3.8",
     "next": "15.5.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^10.0.0",
     "eslint": "9.37.0",
     "eslint-config-next": "15.5.4",
     "prisma": "^6.17.0",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   },
   "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
