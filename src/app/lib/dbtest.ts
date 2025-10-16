@@ -1,4 +1,4 @@
-import type { Ticket, Service, Prisma } from "@prisma/client";
+import type { Ticket, Service, Counter, Prisma } from "@prisma/client";
 
 const service: Service = {
   //if everithing works, you should be able to see the Service type structure
@@ -6,6 +6,11 @@ const service: Service = {
   name: "service",
   id: 1n,
   expected_service_time: "10 minutes"
+};
+
+const counter: Counter = {
+  id: 1n,
+  active: true
 };
 
 const ticket: Ticket = {
@@ -18,4 +23,6 @@ const ticket: Ticket = {
   waiting_time: null,
   service_time: null,
   served: false,
+  assigned_at: null,
+  counter_id: null,
 };
