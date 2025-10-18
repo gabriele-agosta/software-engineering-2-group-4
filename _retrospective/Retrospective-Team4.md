@@ -12,9 +12,12 @@ sections:
 
 ### Macro statistics
 
-- Number of stories committed vs. done 
-- Total points committed vs. done 
+- Number of stories committed vs. done
+  > 3 committed, 2 done
+- Total points committed vs. done
+  > 6 points committed, 5 done
 - Nr of hours planned vs. spent (as a team)
+  > 48.05h planned, 60.8 spent
 
 **Remember**a story is done ONLY if it fits the Definition of Done:
  
@@ -29,8 +32,10 @@ sections:
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-| _Uncategorized_   |         |       |            |              |
-| n      |         |        |            |              |  
+| _Uncategorized_   |     12    |       |      33.55      |     38.1         |
+| 1      |     4    |   3     |     5       |      5.5        |  
+| 2 | 4 | 2 | 5.5 | 7 |
+| 3 | 4 | 1 | 4 | 10 |
 
 > story `Uncategorized` is for technical tasks, leave out story points (not applicable in this case)
 
@@ -38,31 +43,42 @@ sections:
 
 |            | Mean | StDev |
 |------------|------|-------|
-| Estimation |      |       | 
-| Actual     |      |       |
+| Estimation |   2   |   2.373    | 
+| Actual     |   2.5   |    3.16   |
 
 - Total estimation error ratio: sum of total hours spent / sum of total hours effort - 1
 
     $$\frac{\sum_i spent_{task_i}}{\sum_i estimation_{task_i}} - 1$$
+  > 0.265
     
 - Absolute relative task estimation error: sum( abs( spent-task-i / estimation-task-i - 1))/n
 
     $$\frac{1}{n}\sum_i^n \left| \frac{spent_{task_i}}{estimation_task_i}-1 \right| $$
+  > 0.5
   
 ## QUALITY MEASURES 
 
 - Unit Testing:
   - Total hours estimated
+    > 4.5
   - Total hours spent
-  - Nr of automated unit test cases 
+    > 4.5
+  - Nr of automated unit test cases
+    > 15
   - Coverage
+    > 60%
 - E2E testing:
   - Total hours estimated
+    > 0
   - Total hours spent
+    > 0
   - Nr of test cases
+    > 0
 - Code review 
-  - Total hours estimated 
+  - Total hours estimated
+    > 3.5
   - Total hours spent
+    > 3
   
 
 
